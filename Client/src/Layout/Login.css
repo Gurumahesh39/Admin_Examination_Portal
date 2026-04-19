@@ -1,0 +1,158 @@
+/* ===== PAGE BACKGROUND ===== */
+.login-page {
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  animation: fadeIn 1.2s ease-in-out;
+}
+
+/* DARK OVERLAY */
+.login-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+/* ===== CARD ===== */
+.login-card {
+  position: relative;
+  z-index: 1;
+  width: 360px;
+  padding: 35px;
+  border-radius: 15px;
+
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(15px);
+
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #fff;
+  text-align: center;
+
+  animation: slideUp 0.8s ease;
+}
+
+/* TITLE */
+.login-card h2 {
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+/* ===== INPUT GROUP ===== */
+.input-group {
+  position: relative;
+  margin-bottom: 30px;
+}
+
+/* INPUT LINE STYLE */
+.input-group input {
+  width: 100%;
+  padding: 8px 0;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+  outline: none;
+  color: #fff;
+  font-size: 15px;
+}
+
+/* PLACEHOLDER */
+.input-group input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* REMOVE DEFAULT FOCUS */
+.input-group input:focus {
+  border-bottom: 1px solid transparent;
+}
+
+/* ANIMATED LINE */
+.input-group::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0%;
+  height: 2px;
+  background: #ffffff;
+  transition: width 0.4s ease;
+}
+
+/* FOCUS EFFECT */
+.input-group:focus-within::after {
+  width: 100%;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+}
+
+/* ===== BUTTON ===== */
+.login-card button {
+  width: 100%;
+  padding: 10px;
+  border-radius: 25px;
+  border: none;
+  background: #ffffff;
+  color: #333;
+  font-weight: 500;
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.login-card button:hover {
+  background: #ddd;
+  transform: scale(1.05);
+}
+
+/* ===== LINKS ===== */
+.login-card p {
+  margin-top: 15px;
+}
+
+.login-card a {
+  color: #ffd369;
+  text-decoration: none;
+}
+
+.login-card a:hover {
+  text-decoration: underline;
+}
+
+/* ===== ALERTS ===== */
+.alert {
+  padding: 8px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.alert.error {
+  background: rgba(255, 0, 0, 0.3);
+}
+
+.alert.success {
+  background: rgba(0, 255, 0, 0.3);
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
