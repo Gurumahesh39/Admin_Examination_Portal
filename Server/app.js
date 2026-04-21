@@ -5,46 +5,36 @@ const mongoose = require("mongoose");
 
 const router = require("./Router/UserRouter");
 
-dotenv.config();
+dotenv.config({path: ".env"});
+
+const hostname=process.env.HOST_NAME
+const port=process.env.PORT
+
+const mongooseDatabse=process.env.MONGODB
+
+mongoose.connect(mongooseDatabse).then((conn)=>{console.log("Mongodb Is COnnected Succesufully")}).catch((err)=>{
+  console.log("Mongodb Is not Connected",err)
+})
 
 const app = express();
 
-/* MIDDLEWARE */
+app.use(cors({origin: "http://localhost:5173", credentials: true,}));
 
-//CORS
-app.use(cors({origin: "http://localhost:5173",credentials: true}));
-// JSON
 app.use(express.json());
-//ROUTES
+
 app.use("/api/v1", router);
-//HEALTH CHECK
+
+
 app.get("/", (req, res) => {
   res.send("API running...");
 });
 
-/*  ERROR HANDLER */
+/* ERROR HANDLER */
 app.use((err, req, res, next) => {
   console.log("Server Error:", err);
   res.status(500).json({ message: "Internal Server Error" });
 });
 
-
-/*  DATABASE */
-const startServer = async () => {
-  try {
-    await mongoose.connect(process.env.MONGODB);
-
-    console.log("MongoDB connected");
-
-    const PORT = process.env.PORT || 5000;
-
-    app.listen(PORT, () => {
-      console.log(`Server running on http://localhost:${PORT}`);
-    });
-
-  } catch (err) {
-    console.log("DB Error:", err);
-  }
-};
-
-startServer();
+app.listen(port,hostname,() => {
+  console.log(`Server started at http://${hostname}:${port}`);
+});

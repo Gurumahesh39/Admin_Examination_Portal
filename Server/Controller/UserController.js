@@ -26,7 +26,6 @@ const registerUser = async (req, res) => {
 
     res.status(201).json({ message: "Registered successfully" });
   } catch (err) {
-    console.log(err);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -55,20 +54,14 @@ const loginUser = async (req, res) => {
 
     const token = jwt.sign(
       { id: user._id },
-      process.env.JWT_SECRET || "secret",
-      { expiresIn: "1d" },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
     );
 
     res.json({ token });
-  } catch (err) {
-    console.log(err);
+  } catch {
     res.status(500).json({ message: "Server error" });
   }
-};
-
-/* LOGOUT */
-const logoutUser = (req, res) => {
-  res.json({ message: "Logout successful" });
 };
 
 /* ADD STUDENT */
@@ -91,8 +84,7 @@ const addStudent = async (req, res) => {
     });
 
     res.json(student);
-  } catch (err) {
-    console.log(err);
+  } catch {
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -100,13 +92,12 @@ const addStudent = async (req, res) => {
 /* GET STUDENTS */
 const getStudents = async (req, res) => {
   try {
-    const students = await Student.find({ teacherId: req.user.id }).sort({
-      createdAt: -1,
-    }); //latest first
+    const students = await Student.find({
+      teacherId: req.user.id,
+    }).sort({ createdAt: -1 });
 
     res.json(students);
-  } catch (err) {
-    console.log(err);
+  } catch {
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -116,53 +107,49 @@ const saveAttendance = async (req, res) => {
   try {
     const { date, students } = req.body;
 
-    if (!date || !Array.isArray(students) || students.length === 0) {
+    if (!date || !Array.isArray(students)) {
       return res.status(400).json({ message: "Invalid data" });
     }
 
     let attendance = await Attendance.findOne({
       teacherId: req.user.id,
-      date
+      date,
     });
 
     if (attendance) {
-      //Add new students to existing list
       attendance.students.push(...students);
       await attendance.save();
 
       return res.json({
-        message: "Students added to existing attendance",
-        attendance
+        message: "Updated existing attendance",
+        attendance,
       });
     }
 
-    //First time create
     attendance = await Attendance.create({
       teacherId: req.user.id,
       date,
-      students
+      students,
     });
 
     res.json({
       message: "Attendance created",
-      attendance
+      attendance,
     });
-
-  } catch (err) {
-    console.log(err);
+  } catch {
     res.status(500).json({ message: "Server error" });
   }
 };
+
 /* GET ATTENDANCE */
 const getAttendance = async (req, res) => {
   try {
-    const data = await Attendance.find({ teacherId: req.user.id }).sort({
-      date: -1,
-    });
+    const data = await Attendance.find({
+      teacherId: req.user.id,
+    }).sort({ date: -1 });
 
     res.json(data);
-  } catch (err) {
-    console.log(err);
+  } catch {
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -173,23 +160,20 @@ const updateAttendance = async (req, res) => {
     const { id } = req.params;
     const { students } = req.body;
 
-    if (!Array.isArray(students)) {
-      return res.status(400).json({ message: "Invalid data" });
-    }
+    const attendance = await Attendance.findOne({
+      _id: id,
+      teacherId: req.user.id,
+    });
 
-    const attendance = await Attendance.findOne({_id: id,teacherId: req.user.id,});
     if (!attendance) {
-      return res.status(404).json({ message: "Record not found" });
+      return res.status(404).json({ message: "Not found" });
     }
 
     attendance.students = students;
     await attendance.save();
-    res.json({
-      message: "Attendance updated successfully",
-      attendance,
-    });
-  } catch (err) {
-    console.log(err);
+
+    res.json({ message: "Updated", attendance });
+  } catch {
     res.status(500).json({ message: "Update failed" });
   }
 };
@@ -197,7 +181,6 @@ const updateAttendance = async (req, res) => {
 module.exports = {
   registerUser,
   loginUser,
-  logoutUser,
   addStudent,
   getStudents,
   saveAttendance,
