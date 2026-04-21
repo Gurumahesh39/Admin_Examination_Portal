@@ -62,6 +62,7 @@ function FilteredStudents() {
     if (!students) return;
 
     if (filter === "all") {
+
       setFiltered(students);
     } else {
       const result = students.filter(

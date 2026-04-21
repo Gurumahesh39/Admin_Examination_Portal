@@ -14,6 +14,7 @@ function Dashboard() {
       try {
         const token = localStorage.getItem("token");
 
+        // If no token → go login
         if (!token) {
           navigate("/login");
           return;
@@ -22,25 +23,38 @@ function Dashboard() {
         setLoading(true);
 
         const res = await fetch("http://localhost:5000/api/v1/students", {
+          method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
         });
+
+        // Token expired or invalid
+        if (res.status === 401) {
+          localStorage.removeItem("token");
+          navigate("/login");
+          return;
+        }
 
         const data = await res.json();
 
         if (!res.ok) {
           setError(data.message || "Failed to fetch data");
+          setStudents([]);
           setLoading(false);
           return;
         }
 
+        //Always use DB data
         setStudents(Array.isArray(data) ? data : []);
+        setError("");
         setLoading(false);
 
       } catch (err) {
-        console.log(err);
+        console.log("Fetch error:", err);
         setError("Server error");
+        setStudents([]);
         setLoading(false);
       }
     };
@@ -48,7 +62,7 @@ function Dashboard() {
     fetchStudents();
   }, [navigate]);
 
-  // CALCULATIONS
+  //CALCULATIONS
   const total = students.length;
 
   const pass = students.filter(
@@ -104,7 +118,7 @@ function Dashboard() {
           </ul>
         </div>
 
-        {/* MAIN */}
+        {/* MAIN CONTENT */}
         <div className="main-content">
 
           <h2>
@@ -114,7 +128,6 @@ function Dashboard() {
           {loading && <p>Loading...</p>}
           {error && <p className="text-danger">{error}</p>}
 
-          {/*ALWAYS SHOW CARDS */}
           {!loading && !error && (
             <>
               <div className="cards">
@@ -151,7 +164,6 @@ function Dashboard() {
 
               </div>
 
-              {/* OPTIONAL MESSAGE */}
               {students.length === 0 && (
                 <p style={{ marginTop: "15px" }}>No students found</p>
               )}
@@ -159,7 +171,6 @@ function Dashboard() {
           )}
 
         </div>
-
       </div>
     </div>
   );

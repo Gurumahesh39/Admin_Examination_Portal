@@ -80,7 +80,7 @@ function Attendance() {
       //Reset form
       setDate("");
       setStudents([{ name: "", branch: "", status: "Present" }]);
-      navigate("/dashboard");
+      navigate("/Dashboard")
     } catch (err) {
       console.log(err);
       setError("Server error");

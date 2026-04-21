@@ -6,11 +6,7 @@ import bgImage from "../assets/loginpage-img.jpg";
 function LoginPage() {
   const navigate = useNavigate();
 
-  const [data, setData] = useState({
-    facultyId: "",
-    password: "",
-  });
-
+  const [data, setData] = useState({facultyId: "",password: "",});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -21,9 +17,7 @@ function LoginPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (loading) return;
-
     setLoading(true);
     setError("");
     setSuccess("");

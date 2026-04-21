@@ -32,7 +32,9 @@ function AttendanceHistory() {
         const result = await res.json();
 
         if (!res.ok) {
+          
           setError(result.message || "Failed to fetch");
+
           setLoading(false);
           return;
         }
@@ -139,18 +141,8 @@ function AttendanceHistory() {
 
             <tbody>
               {(editingIndex === index ? editData : record.students).map((s, i) => (
-                <tr
-                  key={i}
-                  className={
-                    s.status === "Present"
-                      ? "row-present"
-                      : s.status === "Absent"
-                      ? "row-absent"
-                      : "row-late"
-                  }
-                >
+                <tr key={i} className={s.status === "Present"? "row-present": s.status === "Absent"? "row-absent": "row-late"}>
                   <td>{i + 1}</td>
-
                   {/* NAME */}
                   <td>
                     {editingIndex === index ? (
@@ -197,15 +189,8 @@ function AttendanceHistory() {
 
           {/* BUTTONS */}
           {editingIndex === index ? (
-            <button className="save-btn" onClick={() => saveEdit(record._id)}>
-              💾 Save
-            </button>
-          ) : (
-            <button onClick={() => startEdit(index)}>
-              ✏️ Edit
-            </button>
-          )}
-
+            <button className="save-btn" onClick={() => saveEdit(record._id)}>💾 Save</button>) : (
+            <button onClick={() => startEdit(index)}>✏️ Edit</button>)}
         </div>
       ))}
 
